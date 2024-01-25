@@ -47,8 +47,8 @@ def traverse_directories(base_dir, result_dir, asr_model):
 
 if __name__ == '__main__':
     # setup directories
-    base_dir = "audio_data"
-    result_dir = "audio_text"
+    base_dir = "/home/ubuntu/audio_data"
+    result_dir = "/home/ubuntu/audio_text"
     os.makedirs(result_dir, exist_ok=True)
 
     # model
