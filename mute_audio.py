@@ -1,13 +1,16 @@
 import json
+import os
 from pydub import AudioSegment
 
-from pydub import AudioSegment
+'''
+pip install pydub
+'''
 
 def mute_segments(audio_path, segments, output_path):
     audio = AudioSegment.from_file(audio_path)
 
     # Convert segment times from seconds to milliseconds
-    segments = [(start * 1000-200, end * 1000+100) for _,_,start, end in segments]
+    segments = [(start * 1000-250, end * 1000+150) for _,_,start, end in segments]
 
     # Iterate over segments
     for start, end in segments:
@@ -18,16 +21,27 @@ def mute_segments(audio_path, segments, output_path):
     audio.export(output_path, format="wav")
 
 
+def traverse_directories(base_dir, result_dir, segment_dir):
+    list_dir = os.listdir(base_dir)
+
+    for dir in list_dir:
+        input_file = os.path.join(base_dir, dir, "audio.wav")
+        output_file = os.path.join(result_dir, dir+"_muted.wav")
+        segment_path = os.path.join(segment_dir, dir+"_redact.json")
+
+        with open(segment_path) as f:
+            mute_segments_list = json.load(f)
+
+        mute_segments_list.sort(key = lambda x: x[2])
+
+        mute_segments(input_file, mute_segments_list, output_file)
+
+
 if __name__ == '__main__':
-    # Example usage
-    input_file = "../audio/interview/audio.wav"
-    output_file = "../audio_muted/interview_muted.wav"
-    segment_path = '../text_pii/interview_redact.json'
+    # setup directories
+    base_dir = "/home/ubuntu/audio_data"
+    result_dir = "/home/ubuntu/audio_muted"
+    os.makedirs(result_dir, exist_ok=True)
+    segment_dir = "/home/ubuntu/text_pii"
 
-    with open(segment_path) as f:
-        mute_segments_list = json.load(f)
-
-    mute_segments_list.sort(key = lambda x: x[2])
-    # mute_segments_list = [(5, 10), (20, 25)]  # List of tuples representing start and end times in seconds
-
-    mute_segments(input_file, mute_segments_list, output_file)
+    traverse_directories(base_dir, result_dir, segment_dir)
