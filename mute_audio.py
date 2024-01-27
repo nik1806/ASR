@@ -29,6 +29,8 @@ def traverse_directories(base_dir, result_dir, segment_dir):
         output_file = os.path.join(result_dir, dir+"_muted.wav")
         segment_path = os.path.join(segment_dir, dir+"_redact.json")
 
+        print("Muting audio...", dir)
+
         with open(segment_path) as f:
             mute_segments_list = json.load(f)
 
