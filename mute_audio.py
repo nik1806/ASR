@@ -41,9 +41,9 @@ def traverse_directories(base_dir, result_dir, segment_dir):
 
 if __name__ == '__main__':
     # setup directories
-    base_dir = "/home/ubuntu/audio_data"
-    result_dir = "/home/ubuntu/audio_muted"
+    base_dir = "/home/ubuntu/prev_data" # audio_data
+    result_dir = "/home/ubuntu/prev_muted" # audio_muted
     os.makedirs(result_dir, exist_ok=True)
-    segment_dir = "/home/ubuntu/text_pii"
+    segment_dir = "/home/ubuntu/prev_text_pii" # text_pii
 
     traverse_directories(base_dir, result_dir, segment_dir)

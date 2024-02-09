@@ -100,8 +100,8 @@ def traverse_transcripts(base_dir, result_dir, pii_model, alw_tag):
 
 if __name__ == '__main__':
     # setup directories
-    base_dir = "/home/ubuntu/audio_text"
-    result_dir = "/home/ubuntu/text_pii"
+    base_dir = "/home/ubuntu/prev_text" # audio_text
+    result_dir = "/home/ubuntu/prev_text_pii" # text_pii
     os.makedirs(result_dir, exist_ok=True)
 
     # tag list
