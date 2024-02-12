@@ -20,7 +20,8 @@ def mute_segments(audio_path, segments, output_path):
 
     # Iterate over segments
     for start, end in segments:
-        beep_sound = AudioSegment.sine(duration=end-start, frequency=beep_frequency, volume=beep_volume)
+        beep_sound = generators.Sine(beep_frequency).to_audio_segment(duration=end-start).apply_gain(beep_volume)
+
         # Replace the corresponding segment in audio with the beep sound
         audio = audio[:start] + beep_sound + audio[end:]
 
