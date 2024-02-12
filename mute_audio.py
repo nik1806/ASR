@@ -1,6 +1,6 @@
 import json
 import os
-from pydub import AudioSegment
+from pydub import AudioSegment, generators
 
 '''
 pip install pydub
