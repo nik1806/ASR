@@ -7,17 +7,24 @@ pip install pydub
 '''
 
 def mute_segments(audio_path, segments, output_path):
+    # Load the original audio
     audio = AudioSegment.from_file(audio_path)
 
     # Convert segment times from seconds to milliseconds
-    segments = [(start * 1000-250, end * 1000+150) for _,_,start, end in segments]
+    segments = [(start * 1000-250, end * 1000+150) for _, _, start, end in segments]
+
+    # Define the beep sound
+    # beep_duration = 100  # milliseconds
+    beep_frequency = 1000  # Hz
+    beep_volume = -20  # dB
 
     # Iterate over segments
     for start, end in segments:
-        # Replace the corresponding segment in audio with silence
-        audio = audio[:start] + AudioSegment.silent(duration=end-start) + audio[end:]
+        beep_sound = AudioSegment.sine(duration=end-start, frequency=beep_frequency, volume=beep_volume)
+        # Replace the corresponding segment in audio with the beep sound
+        audio = audio[:start] + beep_sound + audio[end:]
 
-    # Export the muted audio to a file
+    # Export the audio with beeps to a file
     audio.export(output_path, format="wav")
 
 
