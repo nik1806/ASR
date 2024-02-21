@@ -5,7 +5,7 @@ def join_audio_to_video(video_file, audio_file, output_file):
         'ffmpeg',
         '-i', video_file,
         '-i', audio_file,
-        '-c:v', 'copy',
+        '-c:v', 'libx264',
         '-c:a', 'aac',
         '-strict', 'experimental',
         '-map', '0:v:0',
