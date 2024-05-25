@@ -52,13 +52,14 @@ def extract_pii(base_dir, result_dir, pii_model, alw_tag):
 
 
 if __name__ == '__main__':
-    orig_vid_dir = '/home/video.mp4'
-    
-    ## function to extract frames
-    frame_dir = '/home/frames/'
+    orig_vid_dir = '~/Desktop/thumb_test/video.mp4'
+        ## function to extract frames
+    frame_dir = '~/Desktop/thumb_test/frames/'
     os.makedirs(frame_dir, exist_ok=True)
+    print(".... Extracting frames from video ....")
     extract_frames(orig_vid_dir, frame_dir)
     
+    # exit()
     ## Object detection model inference
     # sudo CUDA_VISIBLE_DEVICES=0 python3 detect.py --source path_to_frames --conf 0.25 --weights runs/train/train_cliff_sample2/weights/best.pt --save-txt
     # output is saved in a folder located  at ./runs/detect/
@@ -66,42 +67,46 @@ if __name__ == '__main__':
     # python3 4_blur_faces.py -i path_to_frames -l path_to_labels_txt -o path_to_saved_output -r 0.9
     ## missing files script
 
-    # Command 1: Running detect.py with sudo and setting CUDA_VISIBLE_DEVICES
-    detect_command = [
-        'sudo',
-        'CUDA_VISIBLE_DEVICES=0',
-        'python3', 
-        'detect.py', 
-        '--source', 'path_to_frames', 
-        '--conf', '0.25', 
-        '--weights', 'runs/train/train_cliff_sample2/weights/best.pt', 
-        '--save-txt'
-    ]
+    # # Command 1: Running detect.py with sudo and setting CUDA_VISIBLE_DEVICES
+    # print(".... Running object detection model ....")
+    # detect_command = [
+    #     'sudo',
+    #     'CUDA_VISIBLE_DEVICES=0',
+    #     'python3', 
+    #     'detect.py', 
+    #     '--source', 'path_to_frames', 
+    #     '--conf', '0.25', 
+    #     '--weights', 'runs/train/train_cliff_sample2/weights/best.pt', 
+    #     '--save-txt'
+    # ]
 
-    # Using subprocess to run the command
-    subprocess.run(' '.join(detect_command), shell=True)
+    # # Using subprocess to run the command
+    # subprocess.run(' '.join(detect_command), shell=True)
 
-    # Command 2: Running 4_blur_faces.py
-    blur_command = [
-        'python3', 
-        '4_blur_faces.py', 
-        '-i', 'path_to_frames', 
-        '-l', 'path_to_labels_txt', 
-        '-o', 'path_to_saved_output', 
-        '-r', '0.9'
-    ]
+    # # Command 2: Running 4_blur_faces.py
+    # print("... Face blur operation started ...")
+    # blur_command = [
+    #     'python3', 
+    #     '4_blur_faces.py', 
+    #     '-i', 'path_to_frames', 
+    #     '-l', 'path_to_labels_txt', 
+    #     '-o', 'path_to_saved_output', 
+    #     '-r', '0.9'
+    # ]
 
-    # Using subprocess to run the command
-    subprocess.run(blur_command)
+    # # Using subprocess to run the command
+    # subprocess.run(blur_command)
 
 
     ## extract audio from original video
-    audio_dir = '/home/audio/'
+    audio_dir = '~/Desktop/thumb_test/audio/'
+    print("... Extracting audio from original video ...")
     os.makedirs(audio_dir, exist_ok=True)
     extract_audio(orig_vid_dir, audio_dir)
     
     ## get text from audio
-    text_dir = '/home/text/'
+    text_dir = '~/Desktop/thumb_test/text/'
+    print("... Generating transcript from the audio ...")
     os.makedirs(text_dir, exist_ok=True)
     asr_model = audio_transcriber("large", True) # init ASR model
     # run model
@@ -114,7 +119,8 @@ if __name__ == '__main__':
         json.dump(words_timestamp, f)
     
     # get pii from text
-    text_pii_dir = '/home/text_pii/'
+    text_pii_dir = '~/Desktop/thumb_test/text_pii/'
+    print("... Detecting PII from the transcript ...")
     os.makedirs(text_pii_dir, exist_ok=True)
     alw_tag = ["PERSON", "ORG", "LOC"]
     pii_model = NER_model()
@@ -122,7 +128,8 @@ if __name__ == '__main__':
     
     ## beep audio
     filename = 'text_pii'
-    beep_aud_dir = "/home/beep_aud/"
+    beep_aud_dir = "~/Desktop/thumb_test/beep_aud/"
+    print("... Adding beep sound to audio based on PII ...")
     os.makedirs(beep_aud_dir, exist_ok=True)
     print("Replacing by beep sound..")
     with open(text_pii_dir+filename+"_redact.json") as f:
@@ -131,11 +138,13 @@ if __name__ == '__main__':
     mute_segments(audio_dir+"audio.wav",mute_segments_list, beep_aud_dir+"beep.wav")
 
     ## create video from result frames
-    input_res_frames = "/home/...."
-    output_video = "/home/output_video.mp4"
+    input_res_frames = "~/Desktop/thumb_test/...."
+    output_video = "~/Desktop/thumb_test/output_video.mp4"
+    print("... Generating video from resultant frames ...")
     create_video_from_frames(input_res_frames, output_video)
     
     ## merge audio and video 
-    output_aud_vid = "/home/video_with_audio.mp4"
+    output_aud_vid = "~/Desktop/thumb_test/video_with_audio.mp4"
+    print("... Merging final video and audio as final result ...")
     join_audio_to_video(output_video, beep_aud_dir+"beep.wav", output_aud_vid)
     
