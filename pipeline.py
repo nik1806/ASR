@@ -75,7 +75,8 @@ def compare_and_copy_images(folder_a, folder_b):
 if __name__ == '__main__':
     base_dir = "/home/ubuntu/test/"
     orig_vid_dir = base_dir + 'video.mp4'
-        ## function to extract frames
+    
+    ## function to extract frames
     frame_dir = base_dir + 'frames/'
     os.makedirs(frame_dir, exist_ok=True)
     print("... Extracting frames from video ...")
@@ -96,13 +97,13 @@ if __name__ == '__main__':
         'CUDA_VISIBLE_DEVICES=0',
         'python3', 
         'detect.py', 
-        '--source', 'frame_dir', 
+        '--source', frame_dir, 
         '--conf', '0.25', 
         '--weights', 'runs/train/train_cliff_sample2/weights/best.pt', 
         '--save-txt'
     ]
     # Using subprocess to run the command
-    subprocess.run(' '.join(detect_command), shell=True)
+    subprocess.run(' '.join(detect_command), shell=True, check=True)
 
     # Command 2: Running 4_blur_faces.py
     print("\n... Face blur operation started ...")
