@@ -162,7 +162,7 @@ if __name__ == '__main__':
     mute_segments(audio_dir+"audio.wav", mute_segments_list, beep_aud_dir+"beep.wav")
 
     ## create video from result frames
-    input_res_frames = base_dir + "runs/detect/exp"
+    input_res_frames = base_dir + "output_frames/"
     output_video = base_dir + "output_video.mp4"
     print("\n... Generating video from resultant frames ...")
     create_video_from_frames(input_res_frames, output_video)
