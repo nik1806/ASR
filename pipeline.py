@@ -108,7 +108,7 @@ if __name__ == '__main__':
     text_dir = base_dir + 'text/'
     print("\n... Generating transcript from the audio ...")
     os.makedirs(text_dir, exist_ok=True)
-    asr_model = audio_transcriber("large", True) # init ASR model
+    asr_model = audio_transcriber("large", True) # init ASR model ("medium.en" or "large" or "large-v3")
     # run model
     text, words_timestamp = asr_model(os.path.join(audio_dir, "audio.wav"))
     # save transcript
