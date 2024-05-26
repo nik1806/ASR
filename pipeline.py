@@ -123,8 +123,8 @@ if __name__ == '__main__':
     text_pii_dir = base_dir + 'text_pii/'
     print("\n... Detecting PII from the transcript ...")
     os.makedirs(text_pii_dir, exist_ok=True)
-    alw_tag = ["PERSON", "ORG", "LOC"]
-    pii_model = NER_model()
+    alw_tag = ["PERSON", "ORG", "LOC"] # ['MISC'], 'GPE', 'FAC', 'EVENT', 'LAW'
+    pii_model = NER_model() # 'ner-ontonotes-large'
     extract_pii(text_dir, text_pii_dir, pii_model, alw_tag)
     
     ## beep audio
