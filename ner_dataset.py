@@ -80,8 +80,8 @@ def traverse_transcripts(base_dir, result_dir, pii_model, alw_tag):
             for wrd_tags in res[1:]:
 
                 # ignore tags not in list
-                if wrd_tags['tag'] not in alw_tag:
-                    continue
+                # if wrd_tags['tag'] not in alw_tag:
+                    # continue
 
                 # iter over words in seg - to find the word's start and end
                 for idx in range(len(segment[1])):
