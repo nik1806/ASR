@@ -28,7 +28,8 @@ def create_video_from_frames(input_dir, output_file, fps=30):
 
     print(f"Video created successfully: {output_file}")
 
-# Example usage
-input_directory = '....'
-output_video = 'output_video.mp4'
-create_video_from_frames(input_directory, output_video)
+# # Example usage
+if __name__ == '__main__':
+    input_directory = '....'
+    output_video = 'output_video.mp4'
+    create_video_from_frames(input_directory, output_video)
