@@ -1,14 +1,15 @@
 import os
 import json
 import subprocess
+import shutil
 ## import func to extr_video
-from extract_frames import extract_frames
-from ext_aud import extract_audio
-from asr_dataset import audio_transcriber
-from ner_dataset import NER_model, partial_match
-from mute_audio import mute_segments
-from create_video import create_video_from_frames
-from join_aud_vid import join_audio_to_video
+from ASR_NER.extract_frames import extract_frames
+from ASR_NER.ext_aud import extract_audio
+from ASR_NER.asr_dataset import audio_transcriber
+from ASR_NER.ner_dataset import NER_model, partial_match
+from ASR_NER.mute_audio import mute_segments
+from ASR_NER.create_video import create_video_from_frames
+from ASR_NER.join_aud_vid import join_audio_to_video
 
 def extract_pii(base_dir, result_dir, pii_model, alw_tag):
     print("\n", "Tagging ...", base_dir)
@@ -51,13 +52,33 @@ def extract_pii(base_dir, result_dir, pii_model, alw_tag):
         json.dump(redact_time, f)            
 
 
+def compare_and_copy_images(folder_a, folder_b):
+    # Get the list of files in both folders
+    files_in_a = set(os.listdir(folder_a))
+    files_in_b = set(os.listdir(folder_b))
+    
+    # Identify the missing files in folder B
+    missing_files = files_in_a - files_in_b
+    
+    # Filter only image files (assuming images have standard extensions)
+    image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff'}
+    missing_images = [f for f in missing_files if os.path.splitext(f)[1].lower() in image_extensions]
+    
+    # Copy missing images from A to B
+    for image in missing_images:
+        src_path = os.path.join(folder_a, image)
+        dest_path = os.path.join(folder_b, image)
+        shutil.copy2(src_path, dest_path)
+        print(f"Copied {image} to {folder_b}")
+
+
 if __name__ == '__main__':
-    base_dir = "../test/"
+    base_dir = "/home/ubuntu/test/"
     orig_vid_dir = base_dir + 'video.mp4'
         ## function to extract frames
     frame_dir = base_dir + 'frames/'
     os.makedirs(frame_dir, exist_ok=True)
-    print(".... Extracting frames from video ....")
+    print("... Extracting frames from video ...")
     extract_frames(orig_vid_dir, frame_dir) 
     
     # exit()
@@ -65,37 +86,39 @@ if __name__ == '__main__':
     # sudo CUDA_VISIBLE_DEVICES=0 python3 detect.py --source path_to_frames --conf 0.25 --weights runs/train/train_cliff_sample2/weights/best.pt --save-txt
     # output is saved in a folder located  at ./runs/detect/
     #### blur script 
-    # python3 4_blur_faces.py -i path_to_frames -l path_to_labels_txt -o path_to_saved_output -r 0.9
+    # python3 4_blur_faces.py -i runs/detect/exp -l runs/detect/exp/labels -o /home/ubuntu/test/output_frames -r 0.9
     ## missing files script
 
     # # # Command 1: Running detect.py with sudo and setting CUDA_VISIBLE_DEVICES
-    # print("\n... Running object detection model ....")
-    # detect_command = [
-    #     'sudo',
-    #     'CUDA_VISIBLE_DEVICES=0',
-    #     'python3', 
-    #     'detect.py', 
-    #     '--source', 'frame_dir', 
-    #     '--conf', '0.25', 
-    #     '--weights', 'runs/train/train_cliff_sample2/weights/best.pt', 
-    #     '--save-txt'
-    # ]
-    # # Using subprocess to run the command
-    # subprocess.run(' '.join(detect_command), shell=True)
+    print("\n... Running object detection model ....")
+    detect_command = [
+        'sudo',
+        'CUDA_VISIBLE_DEVICES=0',
+        'python3', 
+        'detect.py', 
+        '--source', 'frame_dir', 
+        '--conf', '0.25', 
+        '--weights', 'runs/train/train_cliff_sample2/weights/best.pt', 
+        '--save-txt'
+    ]
+    # Using subprocess to run the command
+    subprocess.run(' '.join(detect_command), shell=True)
 
-    # # Command 2: Running 4_blur_faces.py
-    # print("\n... Face blur operation started ...")
-    # blur_command = [
-    #     'python3', 
-    #     '4_blur_faces.py', 
-    #     '-i', 'frame_dir', 
-    #     '-l', 'path_to_labels_txt', ##!!
-    #     '-o', 'path_to_saved_output', ##!!
-    #     '-r', '0.9'
-    # ]
-    # # Using subprocess to run the command
-    # subprocess.run(blur_command)
+    # Command 2: Running 4_blur_faces.py
+    print("\n... Face blur operation started ...")
+    blur_command = [
+        'python3', 
+        '4_blur_faces.py', 
+        '-i', 'runs/detect/exp', 
+        '-l', 'runs/detect/exp/labels', ##!!
+        '-o', '/home/ubuntu/test/output_frames', ##!!
+        '-r', '0.9'
+    ]
+    # Using subprocess to run the command
+    subprocess.run(blur_command)
 
+    ## compare prev frames to blur and copy the remaining
+    compare_and_copy_images('runs/detect/exp', '/home/ubuntu/test/output_frames')
 
     ## extract audio from original video
     audio_dir = base_dir + 'audio/'
@@ -139,7 +162,7 @@ if __name__ == '__main__':
     mute_segments(audio_dir+"audio.wav", mute_segments_list, beep_aud_dir+"beep.wav")
 
     ## create video from result frames
-    input_res_frames = base_dir + "...."
+    input_res_frames = base_dir + "runs/detect/exp"
     output_video = base_dir + "output_video.mp4"
     print("\n... Generating video from resultant frames ...")
     create_video_from_frames(input_res_frames, output_video)
