@@ -17,9 +17,10 @@ def join_audio_to_video(video_file, audio_file, output_file):
 
     print(f"Audio added to video successfully: {output_file}")
 
-# Example usage
-video_file = 'output_video.mp4'
-audio_file = 'audio_file.mp3'
-output_file = 'video_with_audio.mp4'
+if __name__ == "__main__":
+    # Example usage
+    video_file = 'output_video.mp4'
+    audio_file = 'audio_file.mp3'
+    output_file = 'video_with_audio.mp4'
 
-join_audio_to_video(video_file, audio_file, output_file)
+    join_audio_to_video(video_file, audio_file, output_file)
