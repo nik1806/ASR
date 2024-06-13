@@ -130,7 +130,7 @@ def ai_pipeline(base_dir, filename):
     # ## compare prev frames to blur and copy the remaining
     # compare_and_copy_images(frame_dir, internal_dir + 'object_detect/blurred_object_detection/')
 
-    vid_extensions = {'.mp4', '.mkv', '.webm', '.m4v'}
+    vid_extensions = ['mp4', 'mkv', 'webm', 'm4v']
     if path_vid_filename.split('.')[-1] in vid_extensions:
         ## extract audio from original video
         audio_dir = internal_dir + 'audio/'
