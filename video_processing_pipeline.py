@@ -185,7 +185,8 @@ def ai_pipeline(base_dir, filename):
 
     ## thumbnail
     image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff'}
-    thumb_options = [f for f in frame_dir if os.path.splitext(f)[1].lower() in image_extensions]
+    files_in_frame = set(os.listdir(frame_dir))
+    thumb_options = [f for f in files_in_frame if os.path.splitext(f)[1].lower() in image_extensions]
     thumb_img = random.choice(thumb_options)
     src_path = os.path.join(frame_dir, thumb_img)
     dest_path = os.path.join(output_dir, 'thumbnail.jpg')
