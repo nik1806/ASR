@@ -107,7 +107,7 @@ def ai_pipeline(base_dir, filename):
         '--conf', '0.25', 
         '--weights', 'runs/train/train_cliff_sample2/weights/best.pt', 
         '--save-txt',
-        '--project', internal_dir + 'object_detect/detection/'
+        '--project', internal_dir + 'object_detection/detection/'
     ]
     # Using subprocess to run the command
     subprocess.run(' '.join(detect_command), shell=True, check=True)
@@ -128,7 +128,7 @@ def ai_pipeline(base_dir, filename):
     print("blurring on object detection done")
 
     ## compare prev frames to blur and copy the remaining
-    compare_and_copy_images(frame_dir, internal_dir + 'object_detect/blurred_object_detection/')
+    compare_and_copy_images(frame_dir, internal_dir + 'object_detection/blurred_object_detection/')
 
 
     ## extract audio from original video
@@ -173,7 +173,7 @@ def ai_pipeline(base_dir, filename):
     mute_segments(audio_dir+"audio.wav", mute_segments_list, beep_aud_dir+"beep.wav")
 
     ## create video from result frames
-    input_res_frames = internal_dir + "object_detect/blurred_object_detection/"
+    input_res_frames = internal_dir + "object_detection/blurred_object_detection/"
     output_video = internal_dir + "output_video.mp4"
     print("\n... Generating video from resultant frames ...")
     create_video_from_frames(input_res_frames, output_video)
