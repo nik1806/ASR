@@ -79,7 +79,7 @@ def ai_pipeline(base_dir, filename):
     # base_dir = "/home/ubuntu/test/"
     # orig_vid_dir = base_dir + 'video.mp4'
 
-    path_vid_filename = os.path.join(base_dir, filename)
+    path_vid_filename = os.path.join(base_dir, os.path.join('input', filename))
 
     # create intermediate folder
     internal_dir = os.path.join(base_dir, "internal/")
