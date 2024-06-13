@@ -209,6 +209,9 @@ def parse_args():
     parser.add_argument('--filename', '-f',
                         type=str, required=True,
                         help='name of the video')
+    
+    args = parser.parse_args()
+    return args
 
 
 def main(args):

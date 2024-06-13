@@ -210,6 +210,8 @@ def parse_args():
                         type=str, required=True,
                         help='name of the video')
 
+    args = parser.parse_args()
+    return args
 
 def main(args):
     ai_pipeline(args.base_dir, args.filename)
