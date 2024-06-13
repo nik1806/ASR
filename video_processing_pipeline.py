@@ -11,6 +11,7 @@ from ASR_NER.mute_audio import mute_segments
 from ASR_NER.create_video import create_video_from_frames
 from ASR_NER.join_aud_vid import join_audio_to_video
 import argparse
+import random
 
 def extract_pii(base_dir, result_dir, pii_model, alw_tag):
     print("\n", "Tagging ...", base_dir)
@@ -72,7 +73,7 @@ def compare_and_copy_images(folder_a, folder_b):
         shutil.copy2(src_path, dest_path)
         print(f"Copied {image} to {folder_b}")
     print('checking ----')
-    
+
     
 def ai_pipeline(base_dir, filename):
     # base_dir = "/home/ubuntu/test/"
@@ -181,6 +182,15 @@ def ai_pipeline(base_dir, filename):
     output_aud_vid = output_dir + "video_with_audio.mp4"
     print("\n... Merging final video and audio as final result ...")
     join_audio_to_video(output_video, beep_aud_dir+"beep.wav", output_aud_vid)
+
+    ## thumbnail
+    image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff'}
+    thumb_options = [f for f in frame_dir if os.path.splitext(f)[1].lower() in image_extensions]
+    thumb_img = random.choice(thumb_options)
+    src_path = os.path.join(frame_dir, thumb_img)
+    dest_path = os.path.join(output_dir, 'thumbnail.jpg')
+    shutil.copy2(src_path, dest_path)
+    print(f"Copied {thumb_img} as thumbnail")
     
 
 def parse_args():
